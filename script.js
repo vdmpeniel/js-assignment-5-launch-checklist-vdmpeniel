@@ -12,34 +12,43 @@ const isComplete = (inputs) => {
     }, true);
 }
 
-const init = (document) => {
+const getAllInputs = (document) => {
     list = document.getElementById('faultyItems');
-    pilot = document.querySelector('input[name="pilotName"]').value;
-    copilot = document.querySelector('input[name="copilotName"]').value;
-    fuelLevel = document.querySelector('input[name="fuelLevel"]').value;
-    cargoLevel = document.querySelector('input[name="cargoMass"]').value;
-    
+    pilot = document.querySelector('input[name="pilotName"]');
+    copilot = document.querySelector('input[name="copilotName"]');
+    fuelLevel = document.querySelector('input[name="fuelLevel"]');
+    cargoLevel = document.querySelector('input[name="cargoMass"]');
+}
+const initializeView = () => {
     list.style.visibility = 'hidden';
     launchStatus.textContent = 'Awaiting Information Before Launch';
+    launchStatus.style.color = 'rgb(0, 0, 0)';
     fuelStatus.textContent = 'Fuel level high enough for launch';
     cargoStatus.textContent = 'Cargo mass low enough for launch';
 }
 
+const init = (document) => {
+    getAllInputs(document);
+    initializeView();   
+}
+
 
 window.addEventListener("load", function() {
-
+    init(document);
 
     const form = document.querySelector('[data-testid="testForm"]');
     const inputs = Array.from(this.document.querySelectorAll('input[type="text"]'));
     form.addEventListener('submit', (event) => {
         event.preventDefault();  
+        
         if(!isComplete(inputs)){ 
-            alert("All fields are required ");
-            event.preventDefault();
+            initializeView(); 
+            alert("All fields are required ");            
+
         } else {   
-            if(!formSubmission(document, list, pilot, copilot, fuelLevel, cargoLevel)){ 
-                alert('Make sure to enter valid information for each field!');    
-                event.preventDefault();          
+            if(!formSubmission(document, list, pilot.value, copilot.value, fuelLevel.value, cargoLevel.value)){ 
+                initializeView();
+                alert('Make sure to enter valid information for each field!');                              
             }
         }
     });
